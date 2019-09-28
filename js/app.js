@@ -98,7 +98,7 @@ const postData = async (url = '/addData', data = {}) => {
 }
 
 // Push entries to server
-const saveData = async (event) => {
+const saveData = async () => {
   data.date = getDate();
   data.feelings = feelingsHolder.value;
   data.temp = await getTemp();
@@ -106,9 +106,11 @@ const saveData = async (event) => {
 }
 
 const updateUI = (data) => {
-  date.innerHTML = data.date;
-  temp.innerHTML = data.temp + "&deg;C";
-  content.innerHTML = data.feelings;
+  if (Object.keys(data).length) {
+    date.innerHTML = data.date;
+    temp.innerHTML = data.temp + "&deg;C";
+    content.innerHTML = data.feelings;
+  }
 }
 
 // Clear entries
