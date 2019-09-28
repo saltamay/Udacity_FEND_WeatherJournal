@@ -13,7 +13,7 @@ const content = document.getElementById('content');
 // Get date and convert it to UTC standard
 const getDate = () => {
   const date = new Date();
-  return date.toUTCString();
+  return date.toDateString();
 }
 
 // Information to reach API
