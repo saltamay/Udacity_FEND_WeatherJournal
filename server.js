@@ -1,5 +1,5 @@
 /* Empty JS object to act as endpoint for all routes */
-projectData = {};
+projectData = [{temp: 19, date: 'Today', mood: 'Happy'}];
 
 // Express to run server and routes
 const express = require('express');
@@ -38,7 +38,7 @@ app.post('/addData', function (req, res) {
 })
 
 // Respond with JS object when a GET request is made to the homepage
-app.get('/all', function (req, res) {
-  res.send(projectData)
+app.get('/', function (req, res) {
+  res.send(JSON.stringify(projectData));
 })
 

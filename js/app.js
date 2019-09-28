@@ -1,3 +1,5 @@
+// import { link } from "fs";
+
 // Empty object to store current data
 const data = {};
 
@@ -55,12 +57,34 @@ const getTemp = async () => {
   }
 }
 
+const getData = async (url = '/') => {
+  const response = await fetch(url, {
+    method: 'GET',
+    credentials: 'same-origin',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    // Body data type must match "Content-Type" header        
+    // body: JSON.stringify(data),
+  });
+  try {
+    if (response.ok) {
+      const newData = await response.json();
+      console.log(newData);
+    }
+    // throw new Error('Bad request!');
+  } catch(error) {
+    console.log("error", 'Bad request!');
+  }
+}
+
 // Display results to webpage
 const displayTemp = async (event) => {
   event.preventDefault();
   // getTemp();
   data.temp = await getTemp();
   console.log(data); 
+  getData('http://localhost:8000/');
 }
 
 submit.addEventListener('click', displayTemp);
