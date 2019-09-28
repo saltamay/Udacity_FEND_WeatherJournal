@@ -55,7 +55,6 @@ const getTemp = async () => {
     const response = await fetch(endpoint);
     if(response.ok) {
       const jsonResponse = await response.json();
-      // console.log(jsonResponse);
       return jsonResponse.main.temp;
     } else {
       throw new Error('Request denied!');
@@ -106,6 +105,7 @@ const saveData = async () => {
 }
 
 const updateUI = (data) => {
+  // If there is not entry at all, do nothing
   if (Object.keys(data).length) {
     date.innerHTML = data.date;
     temp.innerHTML = data.temp + "&deg;C";
@@ -121,18 +121,19 @@ const clearDisplay = () => {
 
 // Display response to webpage
 const displayData = async (event) => {
+  // If there is an update and the generate button is clicked
   if (event) {
     event.preventDefault();
     await saveData();
     const newData = await getData('http://localhost:8000/');
     updateUI(newData);
     clearDisplay();
-  } else {
+  } else { // Retrieve the most recent entry
     const newData = await getData('http://localhost:8000/');
     updateUI(newData);
   }
   
 }
 
-displayData();
+displayData(); // Display the most recent entry on page load
 submit.addEventListener('click', displayData);
