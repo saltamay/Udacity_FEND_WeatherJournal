@@ -1,6 +1,15 @@
 // Empty object to store current data
 const data = {};
 
+// Selecting page elements
+const inputField = document.getElementById('zip');
+const submit = document.getElementById('generate');
+const tempHolder = document.getElementById('temp');
+const feelingsHolder = document.getElementById('feelings');
+const date = document.getElementById('date');
+const temp = document.getElementById('temp');
+const content = document.getElementById('content');
+
 // Get date and convert it to UTC standard
 const getDate = () => {
   const date = new Date();
@@ -11,11 +20,6 @@ const getDate = () => {
 const url = 'http://api.openweathermap.org/data/2.5/weather?zip=';
 apiKey = '8b8b3165e19ce597ea29c3c6409b48dc';
 queryParams = '&units=metric&APPID=';
-
-// Selecting page elements
-const inputField = document.getElementById('zip');
-const submit = document.getElementById('generate');
-const tempHolder = document.getElementById('temp');
 
 /**
  * Canadian postal codes would work, only if the "Forward sortation area" portion of the code 
@@ -72,7 +76,7 @@ const getData = async (url = '/') => {
   try {
     if (response.ok) {
       const newData = await response.json();
-      console.log(newData);
+      return newData[newData.length - 1];
     }
   } catch(error) {
     console.log("error", 'Bad request!');
@@ -88,24 +92,34 @@ const postData = async (url = '/addData', data = {}) => {
     },        
     body: JSON.stringify(data),
   });
-  try {
-    if (response.ok) {
-      const newData = await response.json();
-      console.log(newData);
-    }
-  } catch(error) {
-    console.log("error", 'Bad request!');
+  if (!response.ok) {
+    throw new Error('Request denied!');
   }
 }
 
-// Display results to webpage
-const displayTemp = async (event) => {
-  event.preventDefault();
+// Push entries to server
+const saveData = async (event) => {
   data.date = getDate();
+  data.feelings = feelingsHolder.value;
   data.temp = await getTemp();
-  // console.log(data); 
-  // getData('http://localhost:8000/');
-  postData('http://localhost:8000/addData/', data);
+  await postData('http://localhost:8000/addData/', data);
 }
 
-submit.addEventListener('click', displayTemp);
+// Clear entries
+const clearDisplay = () => {
+  inputField.value = "";
+  feelingsHolder.value = "";
+}
+
+// Display response to webpage
+const displayData = async (event) => {
+  event.preventDefault();
+  await saveData();
+  const newData = await getData('http://localhost:8000/');
+  date.innerHTML = newData.date;
+  temp.innerHTML = newData.temp + "&deg;C";
+  content.innerHTML = newData.feelings;
+  clearDisplay();
+}
+
+submit.addEventListener('click', displayData);
