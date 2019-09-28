@@ -113,13 +113,22 @@ const clearDisplay = () => {
 
 // Display response to webpage
 const displayData = async (event) => {
-  event.preventDefault();
-  await saveData();
-  const newData = await getData('http://localhost:8000/');
-  date.innerHTML = newData.date;
-  temp.innerHTML = newData.temp + "&deg;C";
-  content.innerHTML = newData.feelings;
-  clearDisplay();
+  if (event) {
+    event.preventDefault();
+    await saveData();
+    const newData = await getData('http://localhost:8000/');
+    date.innerHTML = newData.date;
+    temp.innerHTML = newData.temp + "&deg;C";
+    content.innerHTML = newData.feelings;
+    clearDisplay();
+  } else {
+    const newData = await getData('http://localhost:8000/');
+    date.innerHTML = newData.date;
+    temp.innerHTML = newData.temp + "&deg;C";
+    content.innerHTML = newData.feelings;
+  }
+  
 }
 
+displayData();
 submit.addEventListener('click', displayData);
