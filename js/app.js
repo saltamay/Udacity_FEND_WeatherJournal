@@ -105,6 +105,12 @@ const saveData = async (event) => {
   await postData('http://localhost:8000/addData/', data);
 }
 
+const updateUI = (data) => {
+  date.innerHTML = data.date;
+  temp.innerHTML = data.temp + "&deg;C";
+  content.innerHTML = data.feelings;
+}
+
 // Clear entries
 const clearDisplay = () => {
   inputField.value = "";
@@ -117,15 +123,11 @@ const displayData = async (event) => {
     event.preventDefault();
     await saveData();
     const newData = await getData('http://localhost:8000/');
-    date.innerHTML = newData.date;
-    temp.innerHTML = newData.temp + "&deg;C";
-    content.innerHTML = newData.feelings;
+    updateUI(newData);
     clearDisplay();
   } else {
     const newData = await getData('http://localhost:8000/');
-    date.innerHTML = newData.date;
-    temp.innerHTML = newData.temp + "&deg;C";
-    content.innerHTML = newData.feelings;
+    updateUI(newData);
   }
   
 }
