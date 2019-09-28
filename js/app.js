@@ -1,3 +1,6 @@
+// Empty object to store current data
+const data = {};
+
 // Information to reach API
 const url = 'http://api.openweathermap.org/data/2.5/weather?zip=';
 apiKey = '8b8b3165e19ce597ea29c3c6409b48dc';
@@ -37,12 +40,13 @@ const getTemp = async () => {
   // Get the first 3 characters of the zipcode entered
   const location = getLocation(query);
   const endpoint = url + location + queryParams + apiKey;
-  console.log(endpoint);
+  // console.log(endpoint);
   try {
     const response = await fetch(endpoint);
     if(response.ok) {
       const jsonResponse = await response.json();
-      console.log(jsonResponse.main.temp);
+      console.log(jsonResponse);
+      return jsonResponse.main.temp;
     } else {
       throw new Error('Request denied!');
     }
@@ -52,9 +56,11 @@ const getTemp = async () => {
 }
 
 // Display results to webpage
-const displayTemp = (event) => {
+const displayTemp = async (event) => {
   event.preventDefault();
-  getTemp();
+  // getTemp();
+  data.temp = await getTemp();
+  console.log(data); 
 }
 
 submit.addEventListener('click', displayTemp);

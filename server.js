@@ -29,3 +29,16 @@ function listening() {
   console.log('server running');
   console.log(`running on location: ${port}`);
 }
+
+// POST method route
+app.post('/addData', function (req, res) {
+  console.log(req.body);
+  projectData.push(req.body);
+  res.send('POST received')
+})
+
+// Respond with JS object when a GET request is made to the homepage
+app.get('/all', function (req, res) {
+  res.send(projectData)
+})
+
