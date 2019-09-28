@@ -32,13 +32,11 @@ function listening() {
 
 // POST method route
 app.post('/addData', function (req, res) {
-  console.log(req.body);
   projectData.push(req.body);
-  res.send('POST received')
 })
 
 // Respond with JS object when a GET request is made to the homepage
 app.get('/', function (req, res) {
-  res.send(JSON.stringify(projectData));
+  res.send(projectData);
 })
 

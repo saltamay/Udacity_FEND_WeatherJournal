@@ -1,7 +1,11 @@
-// import { link } from "fs";
-
 // Empty object to store current data
 const data = {};
+
+// Get date and convert it to UTC standard
+const getDate = () => {
+  const date = new Date();
+  return date.toUTCString();
+}
 
 // Information to reach API
 const url = 'http://api.openweathermap.org/data/2.5/weather?zip=';
@@ -47,7 +51,7 @@ const getTemp = async () => {
     const response = await fetch(endpoint);
     if(response.ok) {
       const jsonResponse = await response.json();
-      console.log(jsonResponse);
+      // console.log(jsonResponse);
       return jsonResponse.main.temp;
     } else {
       throw new Error('Request denied!');
@@ -64,15 +68,31 @@ const getData = async (url = '/') => {
     headers: {
       'Content-Type': 'application/json',
     },
-    // Body data type must match "Content-Type" header        
-    // body: JSON.stringify(data),
   });
   try {
     if (response.ok) {
       const newData = await response.json();
       console.log(newData);
     }
-    // throw new Error('Bad request!');
+  } catch(error) {
+    console.log("error", 'Bad request!');
+  }
+}
+
+const postData = async (url = '/addData', data = {}) => {
+  const response = await fetch(url, {
+    method: 'POST',
+    credentials: 'same-origin',
+    headers: {
+      'Content-Type': 'application/json',
+    },        
+    body: JSON.stringify(data),
+  });
+  try {
+    if (response.ok) {
+      const newData = await response.json();
+      console.log(newData);
+    }
   } catch(error) {
     console.log("error", 'Bad request!');
   }
@@ -81,10 +101,11 @@ const getData = async (url = '/') => {
 // Display results to webpage
 const displayTemp = async (event) => {
   event.preventDefault();
-  // getTemp();
+  data.date = getDate();
   data.temp = await getTemp();
-  console.log(data); 
-  getData('http://localhost:8000/');
+  // console.log(data); 
+  // getData('http://localhost:8000/');
+  postData('http://localhost:8000/addData/', data);
 }
 
 submit.addEventListener('click', displayTemp);
